@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EU</title>
+  <meta charset="UTF-8">
+  <style>
+    #map {
+      height: 100%;
+      width: 100%; 
+    }
+    #button-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #changeButton1, #changeButton2 ,#changeButton3, #changeButton4{
+      width: 200px;
+      height: 40px;
+      background-color: rgb(59, 59, 167);
+      color: white;
+      font-size: 16px;
+      border-radius: 20px;
+    }
+    .country-label {
+      position: absolute;
+      top: 250px;
+      left: 20px;
+      z-index: 999;
+      line-height: 1.5;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: rgb(59, 59, 167);
+    }
+    .legend-container {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .legend-color {
+      width: 20px;
+      height: 20px;
+    }
+    .legend-label {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Europska unija</h1>
+  <div id="map"></div>
+  <div id="button-container">
+    <button id="changeButton1" type="button">Boja prema ljudskom indeksu razvijenosti</button>
+    <button id="changeButton2" type="button">Boja prema nezaposlenosti mladih</button>
+    <button id="changeButton3" type="button">Boja prema prosječnoj visini muškaraca</button>
+    <button id="changeButton4" type="button">Boja prema prosječnom IQ</button>
+
+
+  </div>
+
+  <div id="country-label"></div>
+  <div class="legend-container">
+    <div class="legend-color" style="background-color: #00ff00;"></div>
+    <div class="legend-color" style="background-color: #09ff00;"></div>
+    <div class="legend-color" style="background-color: #15ff00;"></div>
+    <div class="legend-color" style="background-color: #1eff00;"></div>
+    <div class="legend-color" style="background-color: #26ff00;"></div>
+    <div class="legend-color" style="background-color: #33ff00;"></div>
+    <div class="legend-color" style="background-color: #3cff00;"></div>
+    <div class="legend-color" style="background-color: #44ff00;"></div>
+    <div class="legend-color" style="background-color: #51ff00;"></div>
+    <div class="legend-color" style="background-color: #59ff00;"></div>
+    <div class="legend-color" style="background-color: #66ff00;"></div>
+
+    <div class="legend-color" style="background-color: #6fff00;"></div>
+    <div class="legend-color" style="background-color: #77ff00;"></div>
+    <div class="legend-color" style="background-color: #80ff00;"></div>
+    <div class="legend-color" style="background-color: #88ff00;"></div>
+    <div class="legend-color" style="background-color: #95ff00;"></div>
+    <div class="legend-color" style="background-color: #a2ff00;"></div>
+    <div class="legend-color" style="background-color: #aaff00;"></div>
+    <div class="legend-color" style="background-color: #b3ff00;"></div>
+    <div class="legend-color" style="background-color: #bbff00;"></div>
+    <div class="legend-color" style="background-color: #c8ff00;"></div>
+    <div class="legend-color" style="background-color: #d0ff00;"></div>
+    <div class="legend-color" style="background-color: #ddff00;"></div>
+    <div class="legend-color" style="background-color: #e5ff00;"></div>
+    
+    <div class="legend-color" style="background-color: #f6ff00;"></div>
+    <div class="legend-color" style="background-color: #ffff00;"></div>
+    <div class="legend-color" style="background-color: #fff700;"></div>
+    <div class="legend-color" style="background-color: #ffe600;"></div>
+    <div class="legend-color" style="background-color: #ffdd00;"></div>
+    <div class="legend-color" style="background-color: #ffd300;"></div>
+    <div class="legend-color" style="background-color: #ffc800;"></div>
+    <div class="legend-color" style="background-color: #ffbf00;"></div>
+    <div class="legend-color" style="background-color: #ffb700;"></div>
+    <div class="legend-color" style="background-color: #ffaa00;"></div>
+    <div class="legend-color" style="background-color: #ffa200;"></div>
+    <div class="legend-color" style="background-color: #ff9500;"></div>
+    <div class="legend-color" style="background-color: #ff8c00;"></div>
+
+    <div class="legend-color" style="background-color: #ff8400;"></div>
+    <div class="legend-color" style="background-color: #ff7800;"></div>
+    <div class="legend-color" style="background-color: #ff6f00;"></div>
+    <div class="legend-color" style="background-color: #ff6600;"></div>
+    <div class="legend-color" style="background-color: #ff5a00;"></div>
+    <div class="legend-color" style="background-color: #ff5100;"></div>
+    <div class="legend-color" style="background-color: #ff4400;"></div>
+    <div class="legend-color" style="background-color: #ff3c00;"></div>
+    <div class="legend-color" style="background-color: #ff3300;"></div>
+    <div class="legend-color" style="background-color: #ff2600;"></div>
+    <div class="legend-color" style="background-color: #961403;"></div>
+    <div class="legend-color" style="background-color: #6e0f02;"></div>
+    <div class="legend-color" style="background-color: #360802;"></div>
+    
+    <div class="legend-label">Nisko</div>
+    <div class="legend-label">Srednje</div>
+    <div class="legend-label">Visoko</div>
+  </div>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const width = 1200; 
+    const height = 1900; 
+    const projection = d3.geoMercator()
+      .scale(550)
+      .translate([width / 2, height / 2]);
+    const path = d3.geoPath().projection(projection);
+    var skala = d3.scaleLinear()
+                .domain([50000, 800000])
+                .range([0, 6]);
+    var colors = ["#00ff00","#09ff00","#15ff00","#1eff00","#26ff00","#33ff00","#3cff00","#44ff00","#51ff00","#59ff00","#66ff00",
+    "#6fff00","#77ff00","#80ff00","#88ff00","#95ff00","#a2ff00","#aaff00","#b3ff00","#bbff00","#c8ff00","#d0ff00","#ddff00","#e5ff00",
+    "#f6ff00","#ffff00","#fff700","#ffe600","#ffdd00","#ffd300","#ffc800","#ffbf00","#ffb700","#ffaa00","#ffa200","#ff9500","#ff8c00",
+    "#ff8400","#ff7800","#ff6f00","#ff6600","#ff5a00","#ff5100","#ff4400","#ff3c00","#ff3300","#ff2600","#961403","#6e0f02","#360802"];
+
+    const svg = d3.select("#map")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    let selectedCountry = null;
+    
+    let variable = "HDI";
+    let koef = 6500000;
+    function changeVariable1() {
+        if (variable != "HDI" ) {
+          variable = "HDI";
+          koef = 6500000;
+        } 
+        
+        svg.selectAll("path")
+          .style("fill", function (d) {
+            return colors[Math.round(skala(d.properties[variable]*koef))];
+          });
+    }
+    function changeVariable2() {
+        if (variable != "YU") {
+          variable = "YU";
+          koef = 541666;
+        } 
+        
+        svg.selectAll("path")
+          .style("fill", function (d) {
+            return colors[Math.round(skala(d.properties[variable]*koef))];
+          });
+    }
+    function changeVariable3() {
+        if (variable != "VISINA") {
+          variable = "VISINA";
+          koef = 33000;
+        } 
+        
+        svg.selectAll("path")
+          .style("fill", function (d) {
+            return colors[Math.round(skala(d.properties[variable]*koef))];
+          });
+    }
+    function changeVariable4() {
+        if (variable != "IQ") {
+          variable = "IQ";
+          koef = 61000;
+        } 
+        
+        svg.selectAll("path")
+          .style("fill", function (d) {
+            return colors[Math.round(skala(d.properties[variable]*koef))];
+          });
+    }
+
+    const changeButton1 = document.getElementById("changeButton1");
+    changeButton1.addEventListener("click", changeVariable1);
+    const changeButton2 = document.getElementById("changeButton2");
+    changeButton2.addEventListener("click", changeVariable2);
+    const changeButton3 = document.getElementById("changeButton3");
+    changeButton3.addEventListener("click", changeVariable3);
+    const changeButton4 = document.getElementById("changeButton4");
+    changeButton4.addEventListener("click", changeVariable4);
+
+    d3.json("europe3.geojson").then(function(data) {
+      svg.selectAll("path")
+        .data(data.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .style("fill", function (d) {  
+          return colors[Math.round(skala(d.properties[variable] * koef))];
+        })
+        .attr("stroke", "darkyellow")
+        .on("click", function(event, d) {
+
+          if (selectedCountry === d) {
+            d3.select("#country-label").selectAll(".country-label").remove();
+            selectedCountry = null;
+          } else {
+            d3.select("#country-label").selectAll(".country-label").remove();
+
+            d3.select("#country-label")
+              .append("text")
+              .text(function() {
+                ispis = "Naziv: " + d.properties.NAME + "\n"
+                + "Površina: " + d.properties.AREA + " km2\n"
+                + "Broj stanovnika: " + d.properties.POP + "\n"
+                + "BDP: " + d.properties.BDP + " milijardi $\n"
+                + "HDI: " + d.properties.HDI + "\n"
+                + "Postotak nezaposlenih mladih: " + d.properties.YU + "%\n"
+                + "Prosječna visina muškaraca: " + d.properties.VISINA + " cm\n"
+                + "Prosječan IQ: " + d.properties.IQ;
+                return ispis;
+              })
+              .attr("class", "country-label")
+              .attr("font-size", "10px")
+              .attr("fill", "darkblue")
+              .style("white-space", "pre-line");
+            selectedCountry = d;
+          }
+        });
+    });
+  </script>
+</body>
+</html>
